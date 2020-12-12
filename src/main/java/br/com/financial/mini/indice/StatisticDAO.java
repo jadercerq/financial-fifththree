@@ -5,9 +5,12 @@
  */
 package br.com.financial.mini.indice;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,9 +25,10 @@ public class StatisticDAO {
         
         List<String[]> dados = new ArrayList<>();
         
-        Scanner scanner = new Scanner(new FileReader("C:\\Users\\jader\\Documents\\NetBeansProjects\\banco_mini_indice\\banco.txt")).useDelimiter("\\n");
-        while (scanner.hasNext()) {
-            String linha = scanner.next();
+        InputStreamReader reader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("banco.txt"));
+        BufferedReader br = new BufferedReader(reader);
+        String linha = br.readLine();
+        while(linha != null) {
             int jump = 3;
             int fim = 0;
             int indice = 0;
@@ -35,8 +39,9 @@ public class StatisticDAO {
                 fim += jump;
             }
             dados.add(padrao);
+            linha = br.readLine();
         }
-        
+
         return dados;
     }
 }
