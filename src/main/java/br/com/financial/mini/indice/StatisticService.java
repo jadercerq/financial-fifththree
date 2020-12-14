@@ -6,6 +6,7 @@
 package br.com.financial.mini.indice;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,13 +17,13 @@ public class StatisticService {
 
     private final StatisticDAO statisticDAO = new StatisticDAO();
     
-    public Long probabilidade(String padrao) throws IOException {
+    public Long probabilidade(String padrao, int candle) throws IOException {
         float qtdPadraoEncontrado = 0;
         float qtdCompra = 0;
         float qtdVenda = 0;
         float qtdIndefinicao = 0;
 
-        List<String[]> dados = statisticDAO.obterDadosDiarioArquivo();
+        List<String[]> dados = statisticDAO.obterDadosDiarioArquivo(candle);
 
         for (String[] dado : dados) {
             for (int i = 0; i < dado.length - 1; i++) {
@@ -39,10 +40,12 @@ public class StatisticService {
                 }
             }
         }
-
-        System.out.println(" ");
+        
+        String header = "#     ".concat(drawCandle(candle).get(padrao.toUpperCase())).concat("     ").concat(padrao.toUpperCase() + " candle " + candle).concat("               #");
+        
+        System.out.println("");
         System.out.println("############################################");
-        System.out.println("#                   ".concat(padrao.toUpperCase()).concat("                   #"));
+        System.out.println(header);
         System.out.println("############################################");
         System.out.println("Quantidade de vezes que ocorreu o padrao ..: " + qtdPadraoEncontrado);
         System.out.println("Probabilidade de acerto na compra .........: " + ((qtdCompra / qtdPadraoEncontrado) * 100) + "%");
@@ -50,5 +53,20 @@ public class StatisticService {
         System.out.println("Quantidade de indefinicoes .................: " + qtdIndefinicao);
 
         return 0l;
+    }
+
+    private static HashMap<String, String> drawCandle(int candle) {
+        
+        HashMap<String, String> map = new HashMap();
+        map.put("AAA", candle == 1 ? "\u2588|\u2588|\u2588" : candle == 2 ? "\u2588|\u2588 \u2588" : "\u2588 \u2588|\u2588");
+        map.put("AAV", candle == 1 ? "\u2588|\u2588|\u2592" : candle == 2 ? "\u2588|\u2588 \u2592" : "\u2588 \u2588|\u2592");
+        map.put("AVA", candle == 1 ? "\u2588|\u2592|\u2588" : candle == 2 ? "\u2588|\u2592 \u2588" : "\u2588 \u2592|\u2588");
+        map.put("AVV", candle == 1 ? "\u2588|\u2592|\u2592" : candle == 2 ? "\u2588|\u2592 \u2592" : "\u2588 \u2592|\u2592");
+        map.put("VAA", candle == 1 ? "\u2592|\u2588|\u2588" : candle == 2 ? "\u2592|\u2588 \u2588" : "\u2592 \u2588|\u2588");
+        map.put("VAV", candle == 1 ? "\u2592|\u2588|\u2592" : candle == 2 ? "\u2592|\u2588 \u2592" : "\u2592 \u2588|\u2592");
+        map.put("VVA", candle == 1 ? "\u2592|\u2592|\u2588" : candle == 2 ? "\u2592|\u2592 \u2588" : "\u2592 \u2592|\u2588");
+        map.put("VVV", candle == 1 ? "\u2592|\u2592|\u2592" : candle == 2 ? "\u2592|\u2592 \u2592" : "\u2592 \u2592|\u2592");
+        
+        return map;
     }
 }

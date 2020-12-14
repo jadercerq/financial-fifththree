@@ -20,26 +20,31 @@ import java.util.Scanner;
  * @author jader
  */
 public class StatisticDAO {
-    
-    public List<String[]> obterDadosDiarioArquivo() throws FileNotFoundException, IOException {
-        
+
+    public List<String[]> obterDadosDiarioArquivo(int candle) throws FileNotFoundException, IOException {
+
         List<String[]> dados = new ArrayList<>();
-        
+
         InputStreamReader reader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("banco.txt"));
         BufferedReader br = new BufferedReader(reader);
-        String linha = br.readLine();
-        while(linha != null) {
-            int jump = 3;
-            int fim = 0;
-            int indice = 0;
+        String registroDiario = br.readLine();
+        while (registroDiario != null) {
+            int quantidadeCandle5min = 3;
+            int candleInicial = candle - 1;
+            int candleFinal = candle - 1;
+            int posicao = 0;
             String[] padrao = new String[12];
-            for (int i = 0; i < linha.length(); i++) {
-                padrao[indice++] = linha.substring(i, fim + jump);
-                i = i + (jump - 1);
-                fim += jump;
+            for (int jump = candleInicial; jump < registroDiario.length(); jump++) {
+                try {
+                    padrao[posicao++] = registroDiario.substring(jump, candleFinal + quantidadeCandle5min);
+                } catch (StringIndexOutOfBoundsException e) {
+                    padrao[--posicao] = registroDiario.substring(jump, registroDiario.length());
+                }
+                jump = jump + (quantidadeCandle5min - 1);
+                candleFinal += quantidadeCandle5min;
             }
             dados.add(padrao);
-            linha = br.readLine();
+            registroDiario = br.readLine();
         }
 
         return dados;

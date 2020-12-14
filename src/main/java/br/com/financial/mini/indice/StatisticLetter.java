@@ -13,8 +13,8 @@ import java.io.IOException;
  */
 public class StatisticLetter {
     
-    public void verificarProbabilidades(String padrao) throws IOException {
+    public void verificarProbabilidades(String padrao, int candle) throws IOException {
         StatisticService service = new StatisticService();
-        service.probabilidade(padrao);
+        service.probabilidade(padrao, candle);
     }
 }
