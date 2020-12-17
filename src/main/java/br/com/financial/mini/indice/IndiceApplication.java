@@ -2,6 +2,7 @@ package br.com.financial.mini.indice;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeMap;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,12 +19,17 @@ public class IndiceApplication implements CommandLineRunner {
         StatisticLetter statisticLetter = new StatisticLetter();
 
         if (args[0].equals("all")) {
-            HashMap hashMap = this.candles();
-            Iterator it = hashMap.keySet().iterator();
-            while(it.hasNext()){
+            Integer candleChoice = args.length > 1 ? Integer.parseInt(args[1]) : 0;
+            TreeMap treeMap = this.candles();
+            Iterator it = treeMap.keySet().iterator();
+            while (it.hasNext()) {
                 String candle = (String) it.next();
-                for (int posicao = 1; posicao <= 3; posicao++) {
-                    statisticLetter.verificarProbabilidades(candle, posicao);
+                if (candleChoice > 0) {
+                    statisticLetter.verificarProbabilidades(candle, candleChoice);
+                } else {
+                    for (int posicao = 1; posicao <= 3; posicao++) {
+                        statisticLetter.verificarProbabilidades(candle, posicao);
+                    }
                 }
             }
         } else {
@@ -31,17 +37,17 @@ public class IndiceApplication implements CommandLineRunner {
         }
     }
 
-    private HashMap<String, String> candles() {
+    private TreeMap<String, String> candles() {
 
-        HashMap map = new HashMap();
-        map.put("AAA","AAA");
-        map.put("AAV","AAV");
-        map.put("AVA","AVA");
-        map.put("AVV","AVV");
-        map.put("VAA","VAA");
-        map.put("VAV","VAV");
-        map.put("VVA","VVA");
-        map.put("VVV","VVV");
+        TreeMap map = new TreeMap();
+        map.put("AAA", "AAA");
+        map.put("AAV", "AAV");
+        map.put("AVA", "AVA");
+        map.put("AVV", "AVV");
+        map.put("VAA", "VAA");
+        map.put("VAV", "VAV");
+        map.put("VVA", "VVA");
+        map.put("VVV", "VVV");
 
         return map;
     }
